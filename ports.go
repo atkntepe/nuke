@@ -93,9 +93,24 @@ func parseLsofOutput(output string) []PortProcess {
 		})
 	}
 
+	for i := range results {
+		results[i].Command = getFullCommand(results[i].PID)
+		if results[i].Command == "" {
+			results[i].Command = results[i].Name
+		}
+	}
+
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Port < results[j].Port
 	})
 
 	return results
+}
+
+func getFullCommand(pid int) string {
+	out, err := exec.Command("ps", "-p", strconv.Itoa(pid), "-o", "args=").Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
 }
