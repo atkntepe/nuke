@@ -18,7 +18,7 @@ func ListDevPorts(showAll bool) ([]PortProcess, error) {
 	out, err := exec.Command("lsof", "-iTCP", "-sTCP:LISTEN", "-n", "-P").CombinedOutput()
 	if err != nil {
 		if len(out) == 0 {
-			return nil, err
+			return nil, nil
 		}
 	}
 
